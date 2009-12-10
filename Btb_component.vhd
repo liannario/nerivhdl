@@ -30,15 +30,15 @@ use work.Btb.all;
 --use UNISIM.VComponents.all;
 
 entity Btb_component is
-    Port ( wr : in  STD_LOGIC;
-           rd : in  STD_LOGIC;
-           pc_if : in  std_logic_vector(PC_BITS-1 downto 0);
-           pc_ex : in  std_logic_vector(PC_BITS-1 downto 0);
-           pc_dest_ex : in  std_logic_vector(PC_BITS-1 downto 0);
-           pred_ok_ex : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-           tkn_if : out  STD_LOGIC;
-           pc_dest_if : out  std_logic_vector(PC_BITS-1 downto 0));
+    Port ( wr : in  STD_LOGIC; -- segnale write
+           rd : in  STD_LOGIC; -- segnale read
+           pc_if : in  std_logic_vector(PC_BITS-1 downto 0); -- pc proveniente da if
+           pc_ex : in  std_logic_vector(PC_BITS-1 downto 0); -- pc proveniente da ex
+           pc_dest_ex : in  std_logic_vector(PC_BITS-1 downto 0); -- destinazione salto proveniente da ex per aggiornare la cache
+           pred_ok_ex : in  STD_LOGIC; -- predizione corretta o meno (proveniente da ex)
+           reset : in  STD_LOGIC; -- reset
+           tkn_if : out  STD_LOGIC; -- pc_if è presente nella cache ed è predetto taken
+           pc_dest_if : out  std_logic_vector(PC_BITS-1 downto 0)); -- destinazione del salto se tkn_if = 1
 end Btb_component;
 
 architecture Behavioral of Btb_component is
