@@ -74,8 +74,10 @@ begin
 	begin
 	
 		if(rd = '1') then
+			-- estraggo tag e index da pc_if
 			tag := pc_if(PC_BITS-1 downto SLOT_BITS);
 			index := conv_integer(pc_if(SLOT_BITS-1 downto 0));
+			
 			found := '0';
 			
 			-- ricerca della linea di cache
@@ -83,24 +85,24 @@ begin
 				if(Btb_inst(index)(i).tag_pc = tag and Btb_inst(index)(i).status = '1') then -- linea trovata e valida	
 					found := '1';
 					found_index := i;				
-					pc_dest_if <= Btb_inst(index)(i).dest_pc; -- verificare assegnamento di tutti i bit. aggiorno pc_dest_if --downto				 
+					pc_dest_if <= Btb_inst(index)(i).dest_pc; -- aggiorno pc_dest_if --downto -- verificare assegnamento di tutti i bit. 			 
 					case Btb_inst(index)(i).pred is -- emetto il bit di predizione
-						when "11" => tkn_if <= '1';
+						when "11" => tkn_if <= '1';  -- predetto taken
 						when "10" => tkn_if <= '1';
-						when others => tkn_if <= '0'; 
+						when others => tkn_if <= '0';-- predetto untaken
 					end case;					
-					Btb_inst(index)(i).repl <= '0';
+					Btb_inst(index)(i).repl <= '0'; -- aggiorno bit per il rimpiazzamento
 				end if;
 			end loop;
 			
 			-- gestione della politica di rimpiazzamento
 			if(found = '1') then -- la linea è stata trovata	
 				for i in 0 to SLOTS_NUM-1 loop
-					if(i /= found_index) then 			
+					if(i /= found_index) then 	--add: and Btb_inst(index)(i).status = '1'		
 						Btb_inst(index)(i).repl <= '1';		
 					end if;
 				end loop;
-			else
+			else -- la linea non è stata trovata
 				tkn_if <= '0'; -- anche nel caso non venga trovata la linea corrispondente
 			end if;
 		end if;
@@ -117,19 +119,21 @@ begin
 	
 	begin
 	
-	if(wr = '1') then
+		if(wr = '1') then
+			-- estraggo tag e index da pc_ex
 			tag := pc_ex(PC_BITS-1 downto SLOT_BITS);
 			index := conv_integer(pc_ex(SLOT_BITS-1 downto 0));
+			
 			found := '0';
 			found_invalid := '0';
 			
 			for i in 0 to SLOTS_NUM-1 loop
-				if(Btb_inst(index)(i).tag_pc = tag and Btb_inst(index)(i).status = '1') then -- il controllo della validità potrebbe essere omesso
+				if(Btb_inst(index)(i).tag_pc = tag and Btb_inst(index)(i).status = '1') then -- linea trovata (valida); il controllo della validità potrebbe essere omesso
 					found := '1';
 					Btb_inst(index)(i).dest_pc <= pc_dest_ex; -- aggiorno indirizzo di destinazione --downto
 					
 					--aggiornamento bit di predizione
-					if(pred_ok_ex = '1') then
+					if(pred_ok_ex = '1') then -- predizione corretta
 						case Btb_inst(index)(i).pred is
 							when "11" => Btb_inst(index)(i).pred <= "11";
 							when "10" => Btb_inst(index)(i).pred <= "11";
@@ -137,7 +141,7 @@ begin
 							when "00" => Btb_inst(index)(i).pred <= "00";
 							when others => Btb_inst(index)(i).pred <= "00";
 						end case;
-					else
+					else -- predizione sbagliata
 						case Btb_inst(index)(i).pred is
 							when "11" => Btb_inst(index)(i).pred <= "10";
 							when "10" => Btb_inst(index)(i).pred <= "01";
@@ -149,43 +153,50 @@ begin
 				end if;
 			end loop;
 			
-			if(found = '0') then --linea non trovata -> scelgo la linea da rimpiazzare
+			if(found = '0') then --linea non trovata -> cerco linea invalida o valida (da rimpiazzare) per la prima scrittura
 				for i in 0 to SLOTS_NUM-1 loop
 					if(Btb_inst(index)(i).status = '0') then -- trovata linea invalida
 						found_invalid := '1';
 						found_invalid_index := i;
 						Btb_inst(index)(i).tag_pc <= tag; --downto
 						Btb_inst(index)(i).dest_pc <= pc_dest_ex; --downto
-						Btb_inst(index)(i).status <= '1';
+						Btb_inst(index)(i).status <= '1'; -- la linea ora è valida
 						Btb_inst(index)(i).repl <= '0';
 						if(pred_ok_ex = '1') then
-							Btb_inst(index)(i).pred <= "00";
+							Btb_inst(index)(i).pred <= "00"; -- la linea non era nella cache quindi la predizione in lettura era stata untaken
 						else
 							Btb_inst(index)(i).pred <= "11";
 						end if;
-						exit; --break
+						exit; -- break altrimenti se ci fossero altre linee invalide scriverei lo stesso dato più volte
 					end if;
 				end loop;
 				
-				if(found_invalid = '1') then
+				if(found_invalid = '1') then -- trovata linea invalida
 					for i in 0 to SLOTS_NUM-1 loop
-						if(i /= found_invalid_index and Btb_inst(index)(i).status = '1') then
+						if(i /= found_invalid_index and Btb_inst(index)(i).status = '1') then -- linea diversa da quella trovata e valida
 							Btb_inst(index)(i).repl <= '1';
 						end if;
 					end loop;
 				else -- non ci sono linee invalide
 					for i in 0 to SLOTS_NUM-1 loop
-						if(Btb_inst(index)(i).repl = '1') then -- trovata linea da rimpiazzare
+						if(Btb_inst(index)(i).repl = '1') then -- trovata la linea valida da rimpiazzare
 							Btb_inst(index)(i).tag_pc <= tag; --downto
 							Btb_inst(index)(i).dest_pc <= pc_dest_ex; --downto
 							Btb_inst(index)(i).repl <= '0';
+							--add
+							if(pred_ok_ex = '1') then
+								Btb_inst(index)(i).pred <= "00"; -- la linea non era nella cache quindi la predizione in lettura era stata untaken
+							else
+								Btb_inst(index)(i).pred <= "11";
+							end if;							
+							--fineadd
 						else
 							Btb_inst(index)(i).repl <= '1';
 						end if;
 					end loop;
 				end if;
 			end if;
-	end if;
+		end if;
 	
 	end process;
 	
