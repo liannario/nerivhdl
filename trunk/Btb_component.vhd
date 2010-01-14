@@ -98,7 +98,7 @@ begin
 			-- gestione della politica di rimpiazzamento
 			if(found = '1') then -- la linea è stata trovata	
 				for i in 0 to SLOTS_NUM-1 loop
-					if(i /= found_index) then 	--add: and Btb_inst(index)(i).status = '1'		
+					if(i /= found_index and Btb_inst(index)(i).status = '1') then		
 						Btb_inst(index)(i).repl <= '1';		
 					end if;
 				end loop;
@@ -183,13 +183,11 @@ begin
 							Btb_inst(index)(i).tag_pc <= tag; --downto
 							Btb_inst(index)(i).dest_pc <= pc_dest_ex; --downto
 							Btb_inst(index)(i).repl <= '0';
-							--add
 							if(pred_ok_ex = '1') then
 								Btb_inst(index)(i).pred <= "00"; -- la linea non era nella cache quindi la predizione in lettura era stata untaken
 							else
 								Btb_inst(index)(i).pred <= "11";
 							end if;							
-							--fineadd
 						else
 							Btb_inst(index)(i).repl <= '1';
 						end if;
