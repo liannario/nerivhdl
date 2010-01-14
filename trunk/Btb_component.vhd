@@ -169,7 +169,7 @@ begin
 				
 				if(found_invalid = '1') then
 					for i in 0 to SLOTS_NUM-1 loop
-						if(i /= found_invalid_index) then
+						if(i /= found_invalid_index and Btb_inst(index)(i).status = '1') then
 							Btb_inst(index)(i).repl <= '1';
 						end if;
 					end loop;
