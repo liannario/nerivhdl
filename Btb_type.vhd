@@ -8,7 +8,7 @@ package Btb is
 		
 	constant SLOT_BITS : integer := 6; -- lunghezza dello slot in bit
 	constant SLOTS_NUM : integer := 2**SLOT_BITS; -- numero di slot del btb
-	constant TAG_BITS: integer := PARALLELISM-SLOT_BITS; -- lunghezza del tag in bit
+	constant TAG_BITS: integer := PC_BITS-SLOT_BITS; -- lunghezza del tag in bit
 	constant PRED_BITS: integer := 2; -- numero bit di predizione
 	constant WAYS_NUM : integer := 2; -- n-associative
 	
