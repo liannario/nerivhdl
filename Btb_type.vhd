@@ -12,6 +12,14 @@ package Btb is
 	constant PRED_BITS: integer := 2; -- numero bit di predizione
 	constant WAYS_NUM : integer := 2; -- n-associative
 	
+	constant VALID : std_logic := '1';
+	constant INVALID: std_logic := '0';
+	constant TAKEN : std_logic := '1';
+	constant UNTAKEN: std_logic := '0';
+	constant PRED_OK: std_logic := '1';
+	constant PRED_NOT_OK: std_logic := '0';
+	
+	
 	type way_type is record
 		tag_pc : std_logic_vector(TAG_BITS-1 downto 0);
 		dest_pc : std_logic_vector(PC_BITS-1 downto 0);
