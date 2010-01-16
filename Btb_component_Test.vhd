@@ -130,9 +130,46 @@ BEGIN
 		end loop;
 		wr <= '0';
 		-- fine inizializzazione
-		wait for TIME_UNIT;
+		
+		wait for TIME_UNIT;		
 		wr <= '1';
-		pc_if <= "01" & X"1111111";
+		pc_ex <= conv_std_logic_vector(64, 30);
+		pc_dest_ex <= conv_std_logic_vector(10064, 30);
+		pred_ok_ex <= PRED_NOT_OK;
+		wait for TIME_UNIT;
+		wr <= '0';
+		pc_ex <= conv_std_logic_vector(0, 30);
+		
+		wait for TIME_UNIT;		
+		wr <= '1';
+		pc_ex <= conv_std_logic_vector(64, 30);
+		pc_dest_ex <= conv_std_logic_vector(10064, 30);
+		pred_ok_ex <= PRED_NOT_OK;
+		wait for TIME_UNIT;
+		wr <= '0';
+		wait;
+	end process;
+	
+	read_btb : process
+	
+	variable var_pc_if: integer := 64;
+	begin
+	
+		-- attendo l'inizializzazione
+		wait for TIME_UNIT*5;
+	
+		rd <= '1';
+		for i in 0 to 10 loop
+			pc_if <= conv_std_logic_vector(var_pc_if, 30);
+			var_pc_if := var_pc_if + 1;
+			wait for TIME_UNIT;
+		end loop;
+		rd <= '0';
+		wait for TIME_UNIT;
+		rd <= '1';
+		pc_if <= conv_std_logic_vector(64, 30);
+		wait for TIME_UNIT;
+		rd <= '0';
 		wait;
 	end process;
 
