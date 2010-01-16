@@ -47,7 +47,7 @@ architecture Behavioral of Btb_component is
 	
 begin
 	
-	a_reset : process(reset, wr, pc_ex)	
+	a_reset : process(reset, rd, pc_if, wr, pc_ex)	
 	
 	variable tag_rd : std_logic_vector(TAG_BITS-1 downto 0);
 	variable index_rd : integer;
@@ -79,7 +79,8 @@ begin
 		else
 		
 			-- Lettura dallo stadio IF
-			if(rd = '1') then
+			if(pc_if'event and rd = '1') then
+				report "Sto leggendo";
 				-- estraggo tag e index da pc_if
 				tag_rd := pc_if(PC_BITS-1 downto SLOT_BITS);
 				index_rd := conv_integer(pc_if(SLOT_BITS-1 downto 0));
@@ -114,7 +115,7 @@ begin
 			end if;
 			
 			-- Scrittura dallo stadio EX
-			if(wr = '1') then
+			if(pc_ex'event and wr = '1') then
 				report "Sto scrivendo";
 				-- estraggo tag e index da pc_ex
 				tag_wr := pc_ex(PC_BITS-1 downto SLOT_BITS);
@@ -125,7 +126,7 @@ begin
 				
 				for i in 0 to WAYS_NUM-1 loop
 					if(Btb_inst(index_wr, i).tag_pc = tag_wr and Btb_inst(index_wr, i).status = VALID) then -- linea trovata (valida); il controllo della validità potrebbe essere omesso
-						report "Linea trovata";
+						report "Scrittura: Linea trovata";
 						found_wr := '1';
 						Btb_inst(index_wr, i).dest_pc <= pc_dest_ex; -- aggiorno indirizzo di destinazione --downto
 						
@@ -152,10 +153,10 @@ begin
 				end loop;
 				
 				if(found_wr = '0') then --linea non trovata -> cerco linea invalida o valida (da rimpiazzare) per la prima scrittura
-					report "Linea non trovata";
+					report "Scrittura: Linea non trovata";
 					for i in 0 to WAYS_NUM-1 loop
 						if(Btb_inst(index_wr, i).status = INVALID) then -- trovata linea invalida
-							report "Trovata linea invalida";
+							report "Scrittura: Trovata linea invalida";
 							found_invalid_wr := '1';
 							found_invalid_index_wr := i;
 							Btb_inst(index_wr, i).tag_pc <= tag_wr; --downto
@@ -255,7 +256,7 @@ begin
 --	begin
 --	
 --		if(wr = '1') then
---			report "Sto scrivendo";
+--				 "Sto scrivendo";
 --			-- estraggo tag e index da pc_ex
 --			tag := pc_ex(PC_BITS-1 downto SLOT_BITS);
 --			index := conv_integer(pc_ex(SLOT_BITS-1 downto 0));
