@@ -6,7 +6,7 @@ use work.Global.all;
 
 package Btb is
 		
-	constant SLOT_BITS : integer := 6; -- lunghezza dello slot in bit
+	constant SLOT_BITS : integer := 1; -- lunghezza dello slot in bit
 	constant SLOTS_NUM : integer := 2**SLOT_BITS; -- numero di slot del btb
 	constant TAG_BITS: integer := PC_BITS-SLOT_BITS; -- lunghezza del tag in bit
 	constant PRED_BITS: integer := 2; -- numero bit di predizione
@@ -33,8 +33,10 @@ package Btb is
 --		way1: way_type;
 --	end record;
 	
-	type slot_type is array (0 to WAYS_NUM-1) of way_type;
+--	type slot_type is array (0 to WAYS_NUM-1) of way_type;
 	
-	type btb_cache is array (0 to SLOTS_NUM-1) of slot_type;
+--	type btb_cache is array (0 to SLOTS_NUM-1) of slot_type;
+	
+	type btb_cache is array (0 to SLOTS_NUM-1, 0 to WAYS_NUM-1) of way_type;
 	
 end Btb;
