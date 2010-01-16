@@ -66,6 +66,7 @@ ARCHITECTURE behavior OF Btb_component_Test IS
    signal pred_ok_ex : std_logic := '0';
    signal reset : std_logic := '0';
 
+
  	--Outputs
    signal tkn_if : std_logic;
    signal pc_dest_if : std_logic_vector(29 downto 0);
@@ -137,6 +138,7 @@ BEGIN
 		pc_dest_ex <= conv_std_logic_vector(2000, 30);
 		pred_ok_ex <= PRED_NOT_OK;
 		
+		wait for TIME_UNIT;
 		wr <= '0';
 		wait;
 		
