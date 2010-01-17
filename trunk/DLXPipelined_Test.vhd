@@ -33,6 +33,11 @@ architecture Test of DLXPipelined_Test is
 		pc_memory: inout std_logic_vector(PC_BITS-1 downto 0);
 		pc_writeback: inout std_logic_vector(PC_BITS-1 downto 0);
 		
+		--segnali per il btb
+		-- predizione lungo la pipe
+		tkn_decode: inout std_logic;
+		tkn_execute: inout std_logic;
+		
 		-- istruzioni lungo la pipe
 		instruction_fetch: inout std_logic_vector(PARALLELISM-1 downto 0);
 		instruction_decode: inout std_logic_vector(PARALLELISM-1 downto 0);
@@ -41,6 +46,12 @@ architecture Test of DLXPipelined_Test is
 		instruction_writeback: inout std_logic_vector(PARALLELISM-1 downto 0);
 		
 		-- stadio di fetch
+		--segnali per il btb
+		btb_fetch_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
+		btb_fetch_tkn: inout std_logic;
+		btb_fetch_rd : inout std_logic;
+		btb_pred_ok: inout std_logic;
+		btb_exe_wr: inout std_logic;		
 		
 		-- stadio di decode
 		dec_instruction_format: inout std_logic_vector(2 downto 0);
@@ -62,10 +73,10 @@ architecture Test of DLXPipelined_Test is
 																										-- forwarding unit
 		
 		-- stadio di writeback
+		wb_instruction_format: inout std_logic_vector(2 downto 0);
 		wb_dest_register: inout std_logic_vector(4 downto 0);
 		wb_dest_register_data: inout std_logic_vector(PARALLELISM-1 downto 0);
 		wb_dest_register_type: inout std_logic;
-		wb_instruction_format: inout std_logic_vector(2 downto 0);
 		
 		-- uscite di debug
 		register_file_debug: out register_file_type;
@@ -81,6 +92,15 @@ architecture Test of DLXPipelined_Test is
 	signal pc_execute: std_logic_vector(PC_BITS-1 downto 0);
 	signal pc_memory: std_logic_vector(PC_BITS-1 downto 0);
 	signal pc_writeback: std_logic_vector(PC_BITS-1 downto 0);
+	
+	--segnali per il btb
+	signal tkn_decode: std_logic;
+	signal tkn_execute: std_logic;
+	signal btb_fetch_pc_dest: std_logic_vector(PC_BITS-1 downto 0);
+	signal btb_fetch_tkn: std_logic;
+	signal btb_fetch_rd : std_logic;
+	signal btb_pred_ok: std_logic;
+	signal btb_exe_wr: std_logic;
 	
 	signal instruction_fetch: std_logic_vector(PARALLELISM-1 downto 0);
 	signal instruction_decode: std_logic_vector(PARALLELISM-1 downto 0);
@@ -128,6 +148,15 @@ architecture Test of DLXPipelined_Test is
 				pc_memory => pc_memory,
 				pc_writeback => pc_writeback,
 				
+				--segnali per il btb
+				tkn_decode => tkn_decode,
+				tkn_execute => tkn_execute,
+				btb_fetch_pc_dest => btb_fetch_pc_dest,
+				btb_fetch_tkn => btb_fetch_tkn,
+				btb_fetch_rd => btb_fetch_rd,
+				btb_pred_ok => btb_pred_ok,
+				btb_exe_wr => btb_exe_wr,
+	
 				instruction_fetch => instruction_fetch,
 				instruction_decode => instruction_decode,
 				instruction_execute => instruction_execute,
