@@ -23,6 +23,9 @@ entity Decode_Stage is
 		instruction_format: out std_logic_vector(2 downto 0);
 		register_a: out std_logic_vector(PARALLELISM-1 downto 0);
 		register_b: out std_logic_vector(PARALLELISM-1 downto 0);
+		--segnali per il btb
+		tkn_in: in std_logic;
+		tkn_out: out std_logic;
 		
 		-- porte di debug
 		register_file_debug: out register_file_type;
@@ -41,6 +44,8 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 	-- segnali in ingresso sincroni
 	signal pc_buffer: std_logic_vector(PC_BITS-1 downto 0);
 	signal instruction_buffer: std_logic_vector(PARALLELISM-1 downto 0) := (others => '1');
+	--segnali per il btb
+	signal tkn_buffer: std_logic;
 	
 	-- alias istruzioni
 	alias a_opcode_high is instruction_buffer(31 downto 26); -- codice operativo alto
@@ -57,6 +62,8 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 			-- pc e istruzione dallo stadio di fetch
 			pc_buffer <= pc_in;
 			instruction_buffer <= instruction_in;
+			--segnali per il btb
+			tkn_buffer <= tkn_in;
 			
 			-- scrittura del registro dal WB. NOTA: non si fa la scrittura sul registro 0
 			if dest_register_type_WB = '0' then -- registri tipo R
@@ -139,7 +146,8 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 				
 		
 		pc_out <= pc_buffer;
-		
+		--segnali per il btb
+		tkn_out <= tkn_buffer;
 		
 		-- uscite di debug
 		register_file_debug <= register_file_inst;

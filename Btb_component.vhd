@@ -60,6 +60,8 @@ begin
 	variable found_invalid_wr : std_logic;
 	variable found_invalid_index_wr : integer;
 	
+	variable prova: integer := 0;
+	
 	begin
 	
 		if(reset = '1') then
@@ -110,7 +112,16 @@ begin
 						end if;
 					end loop;
 				else -- la linea non è stata trovata
-					tkn_if <= UNTAKEN; -- anche nel caso non venga trovata la linea corrispondente
+					--tkn_if <= UNTAKEN; -- anche nel caso non venga trovata la linea corrispondente
+					--debug per vedere se funziona il btb in lettura
+					--tkn_if <= TAKEN;
+					--pc_dest_if <= conv_std_logic_vector(9, 30);
+					if((prova rem 2) /= 0) then
+						tkn_if <= TAKEN;
+					else
+						tkn_if <= UNTAKEN;
+					end if;
+					prova := prova + 1;
 				end if;
 			end if;
 			

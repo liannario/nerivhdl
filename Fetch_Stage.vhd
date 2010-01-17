@@ -3,6 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.Global.all;
+use work.Btb.all; 
 
 entity Fetch_Stage is
 	port (
@@ -12,7 +13,12 @@ entity Fetch_Stage is
 		force_jump: in std_logic;
 		pc_for_jump: in std_logic_vector(PC_BITS-1 downto 0);
 		instruction: out std_logic_vector(PARALLELISM-1 downto 0);
-		pc: out std_logic_vector(PC_BITS-1 downto 0)
+		pc: out std_logic_vector(PC_BITS-1 downto 0);
+		-- segnali per il btb
+		pc_dest_btb: in std_logic_vector(PC_BITS-1 downto 0);
+		tkn_btb_in: in std_logic;
+		tkn_btb_out: out std_logic;
+		rd_btb: out std_logic
 	);
 end Fetch_Stage;
 
@@ -53,6 +59,9 @@ begin
 				if clk'event and clk = '1' then
 					if force_jump = '1' then
 						pc_reg <= pc_for_jump + 1;
+					-- segnali per il btb	
+					elsif tkn_btb_in = TAKEN then
+						pc_reg <= pc_dest_btb; 
 					else
 						pc_reg <= pc_reg + 1;
 					end if;
@@ -69,7 +78,11 @@ begin
 			if reset = '1' then
 				instruction <= (others => '1');
 				pc <= PC_INIT;
+				--segnali per il btb
+				rd_btb <= '0';
 			else
+				--segnali per il btb
+				rd_btb <= '1';
 				if force_jump = '1' then
 					-- Se force_jump (da J&B EX) è asserito esegue il fetch della istruzione all'indirizzo di destinazione 
 					-- del salto (ovvero a all'indirizzo pc_for_jump (opportunamente esteso) fornito da J&B di EX)
@@ -89,10 +102,13 @@ begin
 					
 					
 					-- Invia il program counter all'uscita per essere campionato dallo stadio successivo (ID)
+					-- il segnale va inviato anche al btb per l'interrogazione --segnali per il btb
 					pc <= pc_reg;
 				end if;
 			end if;
-		end process async;		
+		end process async;	
+
+		tkn_btb_out <= tkn_btb_in;
 		
 end Arch1_Fetch_Stage;
 

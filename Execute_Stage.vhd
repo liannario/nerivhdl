@@ -7,6 +7,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.Global.all;
 --use work.Fixed_32.all;
 use work.Float_32.all;
+use work.Btb.all; 
 
 entity Execute_Stage is
 	port (
@@ -23,6 +24,10 @@ entity Execute_Stage is
 		alu_exit: out std_logic_vector(PARALLELISM-1 downto 0);
 		force_jump: out std_logic;
 		pc_for_jump: out std_logic_vector(PC_BITS-1 downto 0);
+		--segnali per il btb
+		tkn_in: in std_logic;
+		wr_btb: out std_logic;
+		pred_ok_ex: out std_logic;
 		
 		-- forwaring unit 
 		rd_mem: in std_logic_vector(4 downto 0);
@@ -39,6 +44,8 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 	signal pc_buffer: std_logic_vector(PC_BITS-1 downto 0);
 	signal instruction_buffer: std_logic_vector(PARALLELISM-1 downto 0) := (others => '1');
 	signal instruction_format_buffer: std_logic_vector(2 downto 0) := IF_NOP;
+	--segnali per il btb
+	signal tkn_buffer: std_logic;
 	
 	signal register_a_buffer: std_logic_vector(PARALLELISM-1 downto 0);
 	signal register_b_buffer: std_logic_vector(PARALLELISM-1 downto 0);
@@ -60,6 +67,8 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 			instruction_format_buffer <= instruction_format_in;
 			register_a_buffer <= register_a_in;
 			register_b_buffer <= register_b_in;
+			--segnali per il btb
+			tkn_buffer <= tkn_in;
 		end process;
 		
 		
@@ -150,6 +159,9 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 			-- fine forwarding unit
 
 			register_b_out <= var_register_b;
+			--segnali per il btb
+			wr_btb <= '0';
+			pred_ok_ex <= '0';
 			
 			-- operazioni alu
 			if instruction_format_buffer = IF_R then -- istruzioni di tipo R
@@ -221,15 +233,47 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 					when I_ANDI =>
 						alu_exit <= var_register_a and ext(a_immediate_16, PARALLELISM);
 					when I_BEQZ =>
-						if conv_integer(var_register_a) = 0 then
-							force_jump <= '1';
-							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
+						if conv_integer(var_register_a) = 0 then -- branch da prendere
+							--segnali per il btb
+							wr_btb <= '1';
+							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+							if(tkn_buffer = TAKEN) then -- e preso
+								pred_ok_ex <= PRED_OK;																
+							else -- e non preso
+								force_jump <= '1';
+								pred_ok_ex <= PRED_NOT_OK;								
+							end if;
+						else -- branch da non prendere
+							wr_btb <= '1';
+							if(tkn_buffer = UNTAKEN) then	-- e non preso
+								pred_ok_ex <= PRED_OK;																
+							else -- e preso
+								force_jump <= '1';
+								pred_ok_ex <= PRED_NOT_OK;								
+								pc_for_jump <= pc_buffer + 1;
+							end if;
 						end if;
 						alu_exit <= (others => '0');
 					when I_BNEZ =>
-						if conv_integer(var_register_a) /= 0 then
-							force_jump <= '1';
-							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
+						if conv_integer(var_register_a) /= 0 then -- branch da prendere
+							--segnali per il btb
+							wr_btb <= '1';
+							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+							if(tkn_buffer = TAKEN) then -- e preso
+								pred_ok_ex <= PRED_OK;																
+							else -- e non preso
+								force_jump <= '1';
+								pred_ok_ex <= PRED_NOT_OK;								
+							end if;
+						else -- branch da non prendere
+							wr_btb <= '1';
+							if(tkn_buffer = UNTAKEN) then	-- e non preso
+								pred_ok_ex <= PRED_OK;																
+							else -- e preso
+								force_jump <= '1';
+								pred_ok_ex <= PRED_NOT_OK;								
+								pc_for_jump <= pc_buffer + 1;
+							end if;
 						end if; 
 						alu_exit <= (others => '0');						
 					when I_JALR =>
