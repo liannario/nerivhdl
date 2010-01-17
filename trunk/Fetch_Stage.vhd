@@ -116,9 +116,8 @@ begin
 					pc <= pc_reg;
 				end if;
 			end if;
-		end process async;	
-
-		tkn_btb_out <= tkn_btb_in;
+			tkn_btb_out <= tkn_btb_in;
+		end process async;			
 		
 end Arch1_Fetch_Stage;
 
