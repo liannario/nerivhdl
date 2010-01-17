@@ -1,0 +1,5 @@
+l1: addi r1, r0, 0 
+l2: addi r2, r1, 3
+l3: addi r2, r2, -1
+l4: bnez r2, l2
+l5: addi r2, r2, 1
