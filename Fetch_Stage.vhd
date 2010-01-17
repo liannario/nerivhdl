@@ -32,11 +32,21 @@ constant PC_INIT: std_logic_vector(PC_BITS-1 downto 0) := (others => '0');
 
 -- La memoria con il codice macchina del DLX
 constant EPROM_inst: eprom_type(0 to 9) := (
-												X"20010004",
-												X"20220009",
-												X"00411822",
-												X"0BFFFFF0",
-												X"FFFFFFFF",
+--												X"20010004",
+--												X"20220009",
+--												X"00411822",
+--												X"0BFFFFF0",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF"
+												X"20010000",
+												X"20220003",
+												X"2042FFFF",
+												X"1440FFF4",
+												X"20420001",
 												X"FFFFFFFF",
 												X"FFFFFFFF",
 												X"FFFFFFFF",

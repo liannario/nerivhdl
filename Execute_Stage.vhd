@@ -161,7 +161,6 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 			register_b_out <= var_register_b;
 			--segnali per il btb
 			wr_btb <= '0';
-			pred_ok_ex <= '0';
 			
 			-- operazioni alu
 			if instruction_format_buffer = IF_R then -- istruzioni di tipo R
