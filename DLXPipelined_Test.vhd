@@ -48,6 +48,9 @@ architecture Test of DLXPipelined_Test is
 		btb_exe_wr: inout std_logic;	
 		btb_exe_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
 		btb_exe_tkn: inout std_logic;
+		--segnali per le statistiche
+		btb_exe_num_branch_pred_ok: out std_logic_vector(PC_BITS-1 downto 0);
+		btb_exe_num_branch_pred_not_ok: out std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- stadio di fetch
 		
@@ -99,6 +102,9 @@ architecture Test of DLXPipelined_Test is
 	signal btb_pred_ok: std_logic;
 	signal btb_exe_wr: std_logic;
 	signal btb_exe_pc_dest: std_logic_vector(PC_BITS-1 downto 0);
+	--segnali per le statistiche
+	signal btb_exe_num_branch_pred_ok: std_logic_vector(PC_BITS-1 downto 0);
+	signal btb_exe_num_branch_pred_not_ok: std_logic_vector(PC_BITS-1 downto 0);
 	
 	signal instruction_fetch: std_logic_vector(PARALLELISM-1 downto 0);
 	signal instruction_decode: std_logic_vector(PARALLELISM-1 downto 0);
@@ -153,7 +159,10 @@ architecture Test of DLXPipelined_Test is
 				btb_pred_ok => btb_pred_ok,
 				btb_exe_wr => btb_exe_wr,
 				btb_exe_pc_dest => btb_exe_pc_dest,
-				btb_exe_tkn => btb_exe_tkn,	
+				btb_exe_tkn => btb_exe_tkn,
+				--segnali per le statistiche
+				btb_exe_num_branch_pred_ok => btb_exe_num_branch_pred_ok,
+				btb_exe_num_branch_pred_not_ok => btb_exe_num_branch_pred_not_ok,
 				
 				instruction_fetch => instruction_fetch,
 				instruction_decode => instruction_decode,
