@@ -19,11 +19,6 @@ entity DLXPipelined is
 		pc_memory: inout std_logic_vector(PC_BITS-1 downto 0);
 		pc_writeback: inout std_logic_vector(PC_BITS-1 downto 0);
 		
-		--segnali per il btb
-		-- predizione lungo la pipe
-		tkn_decode: inout std_logic;
-		tkn_execute: inout std_logic;
-		
 		-- istruzioni lungo la pipe
 		instruction_fetch: inout std_logic_vector(PARALLELISM-1 downto 0);
 		instruction_decode: inout std_logic_vector(PARALLELISM-1 downto 0);
@@ -31,7 +26,6 @@ entity DLXPipelined is
 		instruction_memory: inout std_logic_vector(PARALLELISM-1 downto 0);		
 		instruction_writeback: inout std_logic_vector(PARALLELISM-1 downto 0);
 		
-		-- stadio di fetch
 		--segnali per il btb
 		btb_fetch_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
 		btb_fetch_tkn: inout std_logic;
@@ -39,8 +33,10 @@ entity DLXPipelined is
 		btb_pred_ok: inout std_logic;
 		btb_exe_wr: inout std_logic;
 		btb_exe_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
+		btb_exe_tkn: inout std_logic;
 		
-		
+		-- stadio di fetch
+				
 		-- stadio di decode
 		dec_instruction_format: inout std_logic_vector(2 downto 0);
 		dec_register_a: inout std_logic_vector(PARALLELISM-1 downto 0);
@@ -99,8 +95,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			pc: out std_logic_vector(PC_BITS-1 downto 0);
 			--segnali per il btb
 			pc_dest_btb: in std_logic_vector(PC_BITS-1 downto 0);
-			tkn_btb_in: in std_logic;
-			--tkn_btb_out: out std_logic;
+			tkn_in_btb: in std_logic;
 			rd_btb: out std_logic
 		);	
 	end component;
@@ -122,8 +117,8 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			register_b: out std_logic_vector(PARALLELISM-1 downto 0);
 			force_jump: in std_logic;
 			--segnali per il btb
-			tkn_in: in std_logic;
-			tkn_out: out std_logic;
+			tkn_in_btb: in std_logic;
+			tkn_out_btb: out std_logic;
 			
 			-- porte di debug
 			register_file_debug: out register_file_type;
@@ -147,9 +142,9 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			force_jump: out std_logic;
 			pc_for_jump: out std_logic_vector(PC_BITS-1 downto 0);
 			--segnali per il btb
-			tkn_in: in std_logic;
+			tkn_in_btb: in std_logic;
 			wr_btb: out std_logic;
-			pred_ok_ex: out std_logic;
+			pred_ok_btb: out std_logic;
 			pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
 			
 			-- forwaring unit 
@@ -227,8 +222,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				pc => pc_fetch,
 				--segnali per il btb
 				pc_dest_btb	=> btb_fetch_pc_dest,
-				tkn_btb_in => btb_fetch_tkn,
-				--tkn_btb_out => tkn_decode,
+				tkn_in_btb => btb_fetch_tkn,
 				rd_btb => btb_fetch_rd
 			);
 		
@@ -250,8 +244,8 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				register_file_debug => register_file_debug,
 				fp_register_file_debug => fp_register_file_debug,
 				--segnali per il btb
-				tkn_in => btb_fetch_tkn,
-				tkn_out => tkn_execute
+				tkn_in_btb => btb_fetch_tkn,
+				tkn_out_btb => btb_exe_tkn
 			);
 		
 		Execute_Stage_inst: Execute_Stage
@@ -270,8 +264,8 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				force_jump => exe_force_jump,
 				pc_for_jump => exe_pc_for_jump,
 				--segnali per il btb
-				tkn_in => tkn_execute,
-				pred_ok_ex => btb_pred_ok,
+				tkn_in_btb => btb_exe_tkn,
+				pred_ok_btb => btb_pred_ok,
 				wr_btb => btb_exe_wr,
 				pc_dest_btb => btb_exe_pc_dest,
 				
