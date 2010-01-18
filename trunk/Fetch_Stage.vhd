@@ -43,14 +43,14 @@ constant EPROM_inst: eprom_type(0 to 9) := (
 --												X"FFFFFFFF",
 --												X"FFFFFFFF"
 												X"20010000",
-												X"20220003",
+												X"20020003",
 												X"2042FFFF",
+												X"FFFFFFFF",
+												X"FFFFFFFF",
 												X"1440FFF4",
-												X"20420001",
-												X"FFFFFFFF",
-												X"FFFFFFFF",
-												X"FFFFFFFF",
-												X"FFFFFFFF",
+												X"20010001",
+												X"20010000",
+												X"1020FFEC",
 												X"FFFFFFFF"
 											);
 
@@ -116,8 +116,9 @@ begin
 					pc <= pc_reg;
 				end if;
 			end if;
-			tkn_btb_out <= tkn_btb_in;
-		end process async;			
+			
+		end process async;		
+		tkn_btb_out <= tkn_btb_in;		
 		
 end Arch1_Fetch_Stage;
 

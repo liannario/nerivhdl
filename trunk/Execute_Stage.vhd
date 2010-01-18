@@ -244,8 +244,10 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							end if;
 						else -- branch da non prendere
 							wr_btb <= '1';
+							
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_ex <= PRED_OK;																
+								pred_ok_ex <= PRED_OK;		
+								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							else -- e preso
 								force_jump <= '1';
 								pred_ok_ex <= PRED_NOT_OK;								
@@ -267,7 +269,8 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 						else -- branch da non prendere
 							wr_btb <= '1';
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_ex <= PRED_OK;																
+								pred_ok_ex <= PRED_OK;	
+								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							else -- e preso
 								force_jump <= '1';
 								pred_ok_ex <= PRED_NOT_OK;								
