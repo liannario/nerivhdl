@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Xilinx_projects/DLXSourceCodeVHDL_BTB/DLX 11.1 Rewrite/DLXPipe/Btb_component_Test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="btb" />
+            <top_module name="btb_component_test" />
+            <top_module name="global" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="10" />
+   <wvobject fp_name="/btb_component_test/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/wr" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wr</obj_property>
+      <obj_property name="ObjectShortName">wr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/rd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rd</obj_property>
+      <obj_property name="ObjectShortName">rd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/pc_if" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_if[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_if[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/pc_ex" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_ex[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_ex[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/pc_dest_ex" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_dest_ex[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_dest_ex[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/pred_ok_ex" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">pred_ok_ex</obj_property>
+      <obj_property name="ObjectShortName">pred_ok_ex</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/tkn_if" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">tkn_if</obj_property>
+      <obj_property name="ObjectShortName">tkn_if</obj_property>
+   </wvobject>
+   <wvobject fp_name="/btb_component_test/pc_dest_if" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_dest_if[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_dest_if[29:0]</obj_property>
+   </wvobject>
+</wave_config>
