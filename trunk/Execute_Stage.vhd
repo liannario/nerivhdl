@@ -25,9 +25,9 @@ entity Execute_Stage is
 		force_jump: out std_logic;
 		pc_for_jump: out std_logic_vector(PC_BITS-1 downto 0);
 		--segnali per il btb
-		tkn_in: in std_logic;
+		tkn_in_btb: in std_logic;
 		wr_btb: out std_logic;
-		pred_ok_ex: out std_logic;
+		pred_ok_btb: out std_logic;
 		pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- forwaring unit 
@@ -69,7 +69,7 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 			register_a_buffer <= register_a_in;
 			register_b_buffer <= register_b_in;
 			--segnali per il btb
-			tkn_buffer <= tkn_in;
+			tkn_buffer <= tkn_in_btb;
 		end process;
 		
 		
@@ -239,19 +239,19 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							wr_btb <= '1';
 							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_ex <= PRED_OK;
+								pred_ok_btb <= PRED_OK;
 							else -- e non preso
 								force_jump <= '1';
-								pred_ok_ex <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;								
 							end if;
 						else -- branch da non prendere
 							wr_btb <= '1';							
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_ex <= PRED_OK;		
+								pred_ok_btb <= PRED_OK;		
 								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							else -- e preso
 								force_jump <= '1';
-								pred_ok_ex <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;								
 								pc_for_jump <= pc_buffer + 1;
 							end if;
 						end if;
@@ -263,19 +263,19 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							wr_btb <= '1';
 							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_ex <= PRED_OK;																
+								pred_ok_btb <= PRED_OK;																
 							else -- e non preso
 								force_jump <= '1';
-								pred_ok_ex <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;								
 							end if;
 						else -- branch da non prendere
 							wr_btb <= '1';
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_ex <= PRED_OK;	
+								pred_ok_btb <= PRED_OK;	
 								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							else -- e preso
 								force_jump <= '1';
-								pred_ok_ex <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;								
 								pc_for_jump <= pc_buffer + 1;
 							end if;
 						end if; 

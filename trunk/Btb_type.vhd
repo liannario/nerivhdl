@@ -18,6 +18,10 @@ package Btb is
 	constant UNTAKEN: std_logic := '0';
 	constant PRED_OK: std_logic := '1';
 	constant PRED_NOT_OK: std_logic := '0';
+	constant TAKEN_STRONG: std_logic_vector(PRED_BITS-1 downto 0) := "11";
+	constant TAKEN_WEAK: std_logic_vector(PRED_BITS-1 downto 0) := "10";
+	constant UNTAKEN_WEAK: std_logic_vector(PRED_BITS-1 downto 0) := "01";
+	constant UNTAKEN_STRONG: std_logic_vector(PRED_BITS-1 downto 0) := "00";
 	
 	
 	type way_type is record
@@ -27,15 +31,6 @@ package Btb is
 		status: std_logic; -- 0 invalido 1 valido
 		repl : std_logic; -- 1 se linea da sostituire
 	end record;
-	
-	--	type slot_type is record 
---		way0 : way_type;
---		way1: way_type;
---	end record;
-	
---	type slot_type is array (0 to WAYS_NUM-1) of way_type;
-	
---	type btb_cache is array (0 to SLOTS_NUM-1) of slot_type;
 	
 	type btb_cache is array (0 to SLOTS_NUM-1, 0 to WAYS_NUM-1) of way_type;
 	

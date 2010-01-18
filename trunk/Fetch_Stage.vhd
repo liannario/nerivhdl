@@ -16,8 +16,7 @@ entity Fetch_Stage is
 		pc: out std_logic_vector(PC_BITS-1 downto 0);
 		-- segnali per il btb
 		pc_dest_btb: in std_logic_vector(PC_BITS-1 downto 0);
-		tkn_btb_in: in std_logic;
-		--tkn_btb_out: out std_logic;
+		tkn_in_btb: in std_logic;
 		rd_btb: out std_logic
 	);
 end Fetch_Stage;
@@ -65,8 +64,8 @@ constant EPROM_inst: eprom_type(0 to 12) := (
 --												X"FFFFFFFF",
 --												X"FFFFFFFF"
 												
-												X"20220003",
-												X"20010004",
+												X"20220008",
+												X"20010008",
 												X"28420001",
 												X"20030001",
 												X"20210000",
@@ -96,7 +95,7 @@ begin
 					if force_jump = '1' then
 						pc_reg <= pc_for_jump + 1;
 					-- segnali per il btb	
-					elsif tkn_btb_in = TAKEN then
+					elsif tkn_in_btb = TAKEN then
 						pc_reg <= pc_dest_btb; 
 					else
 						pc_reg <= pc_reg + 1;
@@ -144,8 +143,6 @@ begin
 			end if;
 			
 		end process async;	
-		
-		--tkn_btb_out <= tkn_btb_in;		
 		
 end Arch1_Fetch_Stage;
 

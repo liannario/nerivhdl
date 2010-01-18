@@ -24,8 +24,8 @@ entity Decode_Stage is
 		register_a: out std_logic_vector(PARALLELISM-1 downto 0);
 		register_b: out std_logic_vector(PARALLELISM-1 downto 0);
 		--segnali per il btb
-		tkn_in: in std_logic;
-		tkn_out: out std_logic;
+		tkn_in_btb: in std_logic;
+		tkn_out_btb: out std_logic;
 		
 		-- porte di debug
 		register_file_debug: out register_file_type;
@@ -63,7 +63,7 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 			pc_buffer <= pc_in;
 			instruction_buffer <= instruction_in;
 			--segnali per il btb
-			tkn_buffer <= tkn_in;
+			tkn_buffer <= tkn_in_btb;
 			
 			-- scrittura del registro dal WB. NOTA: non si fa la scrittura sul registro 0
 			if dest_register_type_WB = '0' then -- registri tipo R
@@ -147,7 +147,7 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 		
 		pc_out <= pc_buffer;
 		--segnali per il btb
-		tkn_out <= tkn_buffer;
+		tkn_out_btb <= tkn_buffer;
 		
 		-- uscite di debug
 		register_file_debug <= register_file_inst;
