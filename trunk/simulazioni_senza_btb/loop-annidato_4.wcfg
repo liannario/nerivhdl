@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Xilinx_projects/DLXSourceCodeVHDL/DLX 11.1 Rewrite/DLXPipe/DLXPipelined_Test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="dlxpipelined_test" />
+            <top_module name="float_32" />
+            <top_module name="global" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="vcomponents" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="31" />
+   <wvobject fp_name="/dlxpipelined_test/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/pc_fetch" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_fetch[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_fetch[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/pc_decode" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_decode[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_decode[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/pc_execute" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_execute[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_execute[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/pc_memory" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_memory[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_memory[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/pc_writeback" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc_writeback[29:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_writeback[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/instruction_fetch" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction_fetch[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_fetch[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/instruction_decode" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction_decode[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_decode[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/instruction_execute" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction_execute[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_execute[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/instruction_memory" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction_memory[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_memory[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/instruction_writeback" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">instruction_writeback[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_writeback[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/dec_instruction_format" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dec_instruction_format[2:0]</obj_property>
+      <obj_property name="ObjectShortName">dec_instruction_format[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/dec_register_a" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dec_register_a[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dec_register_a[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/dec_register_b" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dec_register_b[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dec_register_b[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/exe_instruction_format" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">exe_instruction_format[2:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_instruction_format[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/exe_alu_exit" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">exe_alu_exit[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_alu_exit[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/exe_register_b" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">exe_register_b[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_register_b[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/exe_force_jump" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">exe_force_jump</obj_property>
+      <obj_property name="ObjectShortName">exe_force_jump</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/exe_pc_for_jump" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">exe_pc_for_jump[29:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_pc_for_jump[29:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/mem_instruction_format" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_instruction_format[2:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_instruction_format[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/mem_data_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/mem_dest_register" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_dest_register[4:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_dest_register[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/mem_dest_register_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_dest_register_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_dest_register_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/wb_dest_register" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_dest_register[4:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_dest_register[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/wb_dest_register_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_dest_register_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_dest_register_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/wb_dest_register_type" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_dest_register_type</obj_property>
+      <obj_property name="ObjectShortName">wb_dest_register_type</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/wb_instruction_format" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wb_instruction_format[2:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_instruction_format[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/register_file_debug" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">register_file_debug[0:31]</obj_property>
+      <obj_property name="ObjectShortName">register_file_debug[0:31]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/fp_register_file_debug" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fp_register_file_debug[0:31]</obj_property>
+      <obj_property name="ObjectShortName">fp_register_file_debug[0:31]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/dlxpipelined_test/fp_register_file_debug_hr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fp_register_file_debug_hr[0:31]</obj_property>
+      <obj_property name="ObjectShortName">fp_register_file_debug_hr[0:31]</obj_property>
+   </wvobject>
+</wave_config>

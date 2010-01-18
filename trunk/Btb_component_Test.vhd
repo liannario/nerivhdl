@@ -173,39 +173,4 @@ BEGIN
 		wait;
 	end process;
 
---	write_btb: process
---   begin		
---      
---		rd <= '0';
---		wait for TIME_UNIT*80;
---		rd <= '1';
---		pc_if <= "11" & X"1111111";
---		wr <= '1';
---		pc_ex <= conv_std_logic_vector(0, 30);
---		pc_dest_ex <= conv_std_logic_vector(1000, 30);
---		pred_ok_ex <= PRED_NOT_OK;
---		
---		wait for TIME_UNIT*3;
---		
---		wr <= '0';
---		wait for TIME_UNIT;
---		wr <= '1';
---		pc_ex <= conv_std_logic_vector(64, 30);
---		pc_dest_ex <= conv_std_logic_vector(4450, 30);
---		pred_ok_ex <= PRED_NOT_OK;
---		
---		wait for TIME_UNIT*3;
---		
---		wr <= '0';
---		wait for TIME_UNIT;
---		wr <= '1';
---		pc_ex <= conv_std_logic_vector(128, 30);
---		pc_dest_ex <= conv_std_logic_vector(2000, 30);
---		pred_ok_ex <= PRED_NOT_OK;
---		
---		wait for TIME_UNIT;
---		wr <= '0';
---		wait;
---		
---   end process;
 END;
