@@ -80,7 +80,7 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 		-- azioni asincrone: decodifica del tipo di istruzione, se il reset è attivo
 		-- in uscita va instruction nop. NB: Salti e branch comportano uno stallo della pipe
 		-- che viene automaticamente inserito se il force_jump è attivo
-		async: process(register_file_inst,a_opcode_high,reset,instruction_buffer,force_jump) 
+		async: process(register_file_inst,a_opcode_high,reset,instruction_buffer,force_jump, tkn_buffer) 
 		begin
 			if reset = '1' or force_jump = '1' then
 				instruction_format <= IF_NOP;

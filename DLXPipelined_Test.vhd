@@ -51,7 +51,8 @@ architecture Test of DLXPipelined_Test is
 		btb_fetch_tkn: inout std_logic;
 		btb_fetch_rd : inout std_logic;
 		btb_pred_ok: inout std_logic;
-		btb_exe_wr: inout std_logic;		
+		btb_exe_wr: inout std_logic;	
+		btb_exe_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- stadio di decode
 		dec_instruction_format: inout std_logic_vector(2 downto 0);
@@ -94,13 +95,14 @@ architecture Test of DLXPipelined_Test is
 	signal pc_writeback: std_logic_vector(PC_BITS-1 downto 0);
 	
 	--segnali per il btb
-	signal tkn_decode: std_logic;
+	--signal tkn_decode: std_logic;
 	signal tkn_execute: std_logic;
 	signal btb_fetch_pc_dest: std_logic_vector(PC_BITS-1 downto 0);
 	signal btb_fetch_tkn: std_logic;
 	signal btb_fetch_rd : std_logic;
 	signal btb_pred_ok: std_logic;
 	signal btb_exe_wr: std_logic;
+	signal btb_exe_pc_dest: std_logic_vector(PC_BITS-1 downto 0);
 	
 	signal instruction_fetch: std_logic_vector(PARALLELISM-1 downto 0);
 	signal instruction_decode: std_logic_vector(PARALLELISM-1 downto 0);
@@ -149,13 +151,14 @@ architecture Test of DLXPipelined_Test is
 				pc_writeback => pc_writeback,
 				
 				--segnali per il btb
-				tkn_decode => tkn_decode,
+				--tkn_decode => tkn_decode,
 				tkn_execute => tkn_execute,
 				btb_fetch_pc_dest => btb_fetch_pc_dest,
 				btb_fetch_tkn => btb_fetch_tkn,
 				btb_fetch_rd => btb_fetch_rd,
 				btb_pred_ok => btb_pred_ok,
 				btb_exe_wr => btb_exe_wr,
+				btb_exe_pc_dest => btb_exe_pc_dest,
 	
 				instruction_fetch => instruction_fetch,
 				instruction_decode => instruction_decode,
