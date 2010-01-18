@@ -34,6 +34,9 @@ entity DLXPipelined is
 		btb_exe_wr: inout std_logic;
 		btb_exe_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
 		btb_exe_tkn: inout std_logic;
+		--segnali per le statistiche
+		btb_exe_num_branch_pred_ok: out std_logic_vector(PC_BITS-1 downto 0);
+		btb_exe_num_branch_pred_not_ok: out std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- stadio di fetch
 				
@@ -146,6 +149,9 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			wr_btb: out std_logic;
 			pred_ok_btb: out std_logic;
 			pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
+			--segnali per le statistiche
+			num_branch_pred_ok: out std_logic_vector(PC_BITS-1 downto 0);
+			num_branch_pred_not_ok: out std_logic_vector(PC_BITS-1 downto 0);
 			
 			-- forwaring unit 
 			rd_mem: in std_logic_vector(4 downto 0);
@@ -268,6 +274,8 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				pred_ok_btb => btb_pred_ok,
 				wr_btb => btb_exe_wr,
 				pc_dest_btb => btb_exe_pc_dest,
+				num_branch_pred_ok => btb_exe_num_branch_pred_ok,
+				num_branch_pred_not_ok => btb_exe_num_branch_pred_not_ok,
 				
 				-- forwaring unit 
 				rd_mem => mem_dest_register,

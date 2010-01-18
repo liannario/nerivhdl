@@ -29,6 +29,9 @@ entity Execute_Stage is
 		wr_btb: out std_logic;
 		pred_ok_btb: out std_logic;
 		pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
+		--segnali per statistiche btb
+		num_branch_pred_ok: out std_logic_vector(PC_BITS-1 downto 0);
+		num_branch_pred_not_ok: out std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- forwaring unit 
 		rd_mem: in std_logic_vector(4 downto 0);
@@ -47,7 +50,7 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 	signal instruction_format_buffer: std_logic_vector(2 downto 0) := IF_NOP;
 	--segnali per il btb
 	signal tkn_buffer: std_logic;
-	
+		
 	signal register_a_buffer: std_logic_vector(PARALLELISM-1 downto 0);
 	signal register_b_buffer: std_logic_vector(PARALLELISM-1 downto 0);
 	
@@ -79,6 +82,9 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							register_b_buffer, rd_mem, rd_wb, register_data_from_mem,
 							register_data_from_wb, instruction_format_wb, instruction_format_mem, tkn_buffer)
 		variable var_register_a, var_register_b: std_logic_vector(PARALLELISM-1 downto 0);
+		--segnali per statistiche btb
+		variable num_branch_pred_ok_buffer: integer := 0;
+		variable num_branch_pred_not_ok_buffer: integer := 0;
 		begin
 			
 			var_register_a := register_a_buffer;
@@ -240,22 +246,29 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 							if(tkn_buffer = TAKEN) then -- e preso
 								pred_ok_btb <= PRED_OK;
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
 							else -- e non preso
 								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;	
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
 							end if;
 						else -- branch da non prendere
 							wr_btb <= '1';							
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
 								pred_ok_btb <= PRED_OK;		
 								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
 							else -- e preso
 								force_jump <= '1';
 								pred_ok_btb <= PRED_NOT_OK;								
 								pc_for_jump <= pc_buffer + 1;
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
 							end if;
 						end if;
 						alu_exit <= (others => '0');
+						--segnali per statistiche btb
+						num_branch_pred_ok <= conv_std_logic_vector(num_branch_pred_ok_buffer, PC_BITS);
+						num_branch_pred_not_ok <= conv_std_logic_vector(num_branch_pred_not_ok_buffer, PC_BITS);
 					when I_BNEZ =>
 						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 						if conv_integer(var_register_a) /= 0 then -- branch da prendere
@@ -263,20 +276,24 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							wr_btb <= '1';
 							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_btb <= PRED_OK;																
+								pred_ok_btb <= PRED_OK;	
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
 							else -- e non preso
 								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;								
+								pred_ok_btb <= PRED_NOT_OK;	
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
 							end if;
 						else -- branch da non prendere
 							wr_btb <= '1';
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
 								pred_ok_btb <= PRED_OK;	
-								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
 							else -- e preso
 								force_jump <= '1';
 								pred_ok_btb <= PRED_NOT_OK;								
 								pc_for_jump <= pc_buffer + 1;
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
 							end if;
 						end if; 
 						alu_exit <= (others => '0');						
@@ -358,7 +375,7 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 					when IF_LF =>
 						alu_exit <= var_register_a + sxt(a_immediate_16, PARALLELISM);
 					when IF_SF =>
-						alu_exit <= var_register_a + sxt(a_immediate_16, PARALLELISM);
+						alu_exit <= var_register_a + sxt(a_immediate_16, PARALLELISM); 
 					when others =>
 						alu_exit <= (others => '0');
 				end case;						
@@ -368,11 +385,13 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 				alu_exit <= (others => '0');
 			end if;
 			-- fine operazioni alu
-			
+			--segnali per statistiche btb
+			num_branch_pred_ok <= conv_std_logic_vector(num_branch_pred_ok_buffer, PC_BITS);
+			num_branch_pred_not_ok <= conv_std_logic_vector(num_branch_pred_not_ok_buffer, PC_BITS);
 		end process;
 		
 		instruction_format_out <= instruction_format_buffer;
 		instruction_out <= instruction_buffer;
 		pc_out <= pc_buffer;
-
+		
 	end Arch1_Execute_Stage;

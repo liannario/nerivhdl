@@ -83,7 +83,7 @@ begin
 		
 			-- Lettura dallo stadio IF
 			if(pc_if'event and rd = '1') then
-				report "Sto leggendo";
+				--report "Sto leggendo";
 				-- estraggo tag e index da pc_if
 				tag_rd := pc_if(PC_BITS-1 downto SLOT_BITS);
 				index_rd := conv_integer(pc_if(SLOT_BITS-1 downto 0));
@@ -93,8 +93,9 @@ begin
 				-- ricerca della linea di cache
 				for i in 0 to WAYS_NUM-1 loop
 					if(Btb_inst(index_rd, i).tag_pc = tag_rd and Btb_inst(index_rd, i).status = VALID) then -- linea trovata e valida	
+						report "Lettura: linea trovata";
 						found_rd := '1';
-						found_index_rd := i;				
+						found_index_rd := i;	
 						pc_dest_if <= Btb_inst(index_rd, i).dest_pc; -- aggiorno pc_dest_if --downto -- verificare assegnamento di tutti i bit. 			 
 						case Btb_inst(index_rd, i).pred is -- emetto il bit di predizione
 							when TAKEN_STRONG => tkn_if <= TAKEN;     -- predetto taken
@@ -113,6 +114,7 @@ begin
 						end if;
 					end loop;
 				else -- la linea non è stata trovata
+					report "Lettura: linea non trovata";
 					tkn_if <= UNTAKEN; -- anche nel caso non venga trovata la linea corrispondente
 					--debug per vedere se funziona il btb in lettura
 					--tkn_if <= TAKEN;
