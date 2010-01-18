@@ -248,7 +248,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				register_file_debug => register_file_debug,
 				fp_register_file_debug => fp_register_file_debug,
 				--segnali per il btb
-				tkn_in => tkn_decode,
+				tkn_in => btb_fetch_tkn,
 				tkn_out => tkn_execute
 			);
 		
