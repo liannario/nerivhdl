@@ -1,0 +1,11 @@
+l1: addi r2, r1, 3
+l2: addi r1, r0, 4 
+l3: subi r2, r2, 1
+l4: addi r1, r0, 1
+l5: addi r1, r1, 2
+l6: bnez r2, l2
+l7: addi r2, r2, 1
+l8: subi r1, r1, 1
+l9: addi r3, r0, 1
+l10: bnez r1, l3
+
