@@ -17,7 +17,7 @@ entity Fetch_Stage is
 		-- segnali per il btb
 		pc_dest_btb: in std_logic_vector(PC_BITS-1 downto 0);
 		tkn_btb_in: in std_logic;
-		tkn_btb_out: out std_logic;
+		--tkn_btb_out: out std_logic;
 		rd_btb: out std_logic
 	);
 end Fetch_Stage;
@@ -42,16 +42,39 @@ constant EPROM_inst: eprom_type(0 to 9) := (
 --												X"FFFFFFFF",
 --												X"FFFFFFFF",
 --												X"FFFFFFFF"
-												X"20010000",
-												X"20020003",
-												X"2042FFFF",
-												X"FFFFFFFF",
-												X"FFFFFFFF",
-												X"1440FFF4",
+
+--												X"20010000",
+--												X"20020003",
+--												X"2042FFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"1440FFF4",
+--												X"20010001",
+--												X"20010000",
+--												X"1020FFEC",
+--												X"FFFFFFFF"
+											
+--												X"20220003",
+--												X"20010000",
+--												X"2042FFFF",
+--												X"20010001",
+--												X"20210002",
+--												X"1440FFEC",
+--												X"20420001",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF",
+--												X"FFFFFFFF"
+												
+												X"20220003",
+												X"20010004",
+												X"28420001",
 												X"20010001",
-												X"20010000",
-												X"1020FFEC",
-												X"FFFFFFFF"
+												X"20210002",
+												X"1440FFEC",
+												X"20420001",
+												X"28210001",
+												X"20030001",
+												X"1420FFE0"
 											);
 
 
@@ -117,8 +140,9 @@ begin
 				end if;
 			end if;
 			
-		end process async;		
-		tkn_btb_out <= tkn_btb_in;		
+		end process async;	
+		
+		--tkn_btb_out <= tkn_btb_in;		
 		
 end Arch1_Fetch_Stage;
 

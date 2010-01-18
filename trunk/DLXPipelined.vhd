@@ -38,6 +38,7 @@ entity DLXPipelined is
 		btb_fetch_rd : inout std_logic;
 		btb_pred_ok: inout std_logic;
 		btb_exe_wr: inout std_logic;
+		btb_exe_pc_dest: inout std_logic_vector(PC_BITS-1 downto 0);
 		
 		
 		-- stadio di decode
@@ -99,7 +100,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			--segnali per il btb
 			pc_dest_btb: in std_logic_vector(PC_BITS-1 downto 0);
 			tkn_btb_in: in std_logic;
-			tkn_btb_out: out std_logic;
+			--tkn_btb_out: out std_logic;
 			rd_btb: out std_logic
 		);	
 	end component;
@@ -149,6 +150,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 			tkn_in: in std_logic;
 			wr_btb: out std_logic;
 			pred_ok_ex: out std_logic;
+			pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
 			
 			-- forwaring unit 
 			rd_mem: in std_logic_vector(4 downto 0);
@@ -208,7 +210,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
           rd => btb_fetch_rd,
           pc_if => pc_fetch,
           pc_ex => pc_execute,
-          pc_dest_ex => exe_pc_for_jump,
+          pc_dest_ex => btb_exe_pc_dest,
           pred_ok_ex => btb_pred_ok,
           reset => reset,
           tkn_if => btb_fetch_tkn,
@@ -226,7 +228,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				--segnali per il btb
 				pc_dest_btb	=> btb_fetch_pc_dest,
 				tkn_btb_in => btb_fetch_tkn,
-				tkn_btb_out => tkn_decode,
+				--tkn_btb_out => tkn_decode,
 				rd_btb => btb_fetch_rd
 			);
 		
@@ -271,6 +273,7 @@ architecture Arch1_DLXPipelined of DLXPipelined is
 				tkn_in => tkn_execute,
 				pred_ok_ex => btb_pred_ok,
 				wr_btb => btb_exe_wr,
+				pc_dest_btb => btb_exe_pc_dest,
 				
 				-- forwaring unit 
 				rd_mem => mem_dest_register,

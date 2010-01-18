@@ -28,6 +28,7 @@ entity Execute_Stage is
 		tkn_in: in std_logic;
 		wr_btb: out std_logic;
 		pred_ok_ex: out std_logic;
+		pc_dest_btb: out std_logic_vector(PC_BITS-1 downto 0);
 		
 		-- forwaring unit 
 		rd_mem: in std_logic_vector(4 downto 0);
@@ -76,7 +77,7 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 		async: process(a_opcode_high, a_opcode_low, a_immediate_16, a_immediate_26, pc_buffer,
 							a_rs1, a_rs2, instruction_buffer, instruction_format_buffer, register_a_buffer, 
 							register_b_buffer, rd_mem, rd_wb, register_data_from_mem,
-							register_data_from_wb, instruction_format_wb, instruction_format_mem)
+							register_data_from_wb, instruction_format_wb, instruction_format_mem, tkn_buffer)
 		variable var_register_a, var_register_b: std_logic_vector(PARALLELISM-1 downto 0);
 		begin
 			
@@ -232,19 +233,19 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 					when I_ANDI =>
 						alu_exit <= var_register_a and ext(a_immediate_16, PARALLELISM);
 					when I_BEQZ =>
+						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 						if conv_integer(var_register_a) = 0 then -- branch da prendere
 							--segnali per il btb
 							wr_btb <= '1';
-							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_ex <= PRED_OK;																
+								pred_ok_ex <= PRED_OK;
 							else -- e non preso
 								force_jump <= '1';
 								pred_ok_ex <= PRED_NOT_OK;								
 							end if;
 						else -- branch da non prendere
-							wr_btb <= '1';
-							
+							wr_btb <= '1';							
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
 								pred_ok_ex <= PRED_OK;		
 								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
@@ -256,6 +257,7 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 						end if;
 						alu_exit <= (others => '0');
 					when I_BNEZ =>
+						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 						if conv_integer(var_register_a) /= 0 then -- branch da prendere
 							--segnali per il btb
 							wr_btb <= '1';
