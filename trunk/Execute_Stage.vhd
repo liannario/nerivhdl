@@ -266,9 +266,6 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 							end if;
 						end if;
 						alu_exit <= (others => '0');
-						--segnali per statistiche btb
-						num_branch_pred_ok <= conv_std_logic_vector(num_branch_pred_ok_buffer, PC_BITS);
-						num_branch_pred_not_ok <= conv_std_logic_vector(num_branch_pred_not_ok_buffer, PC_BITS);
 					when I_BNEZ =>
 						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 						if conv_integer(var_register_a) /= 0 then -- branch da prendere
