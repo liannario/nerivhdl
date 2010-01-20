@@ -101,7 +101,6 @@ BEGIN
       
 		reset <= '0';
 		wait for TIME_UNIT;
-		-- hold reset state for 100ms.
 		reset <= '1';
       wait for TIME_UNIT*2;
 		reset <= '0';
