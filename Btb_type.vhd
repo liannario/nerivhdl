@@ -11,7 +11,7 @@ package Btb is
 	constant TAG_BITS: integer := PC_BITS-SLOT_BITS; -- lunghezza del tag in bit
 	constant PRED_BITS: integer := 2; -- numero bit di predizione
 	constant WAYS_NUM : integer := 2; -- n-associative
-	
+
 	constant VALID : std_logic := '1';
 	constant INVALID: std_logic := '0';
 	constant TAKEN : std_logic := '1';
@@ -23,15 +23,16 @@ package Btb is
 	constant UNTAKEN_WEAK: std_logic_vector(PRED_BITS-1 downto 0) := "01";
 	constant UNTAKEN_STRONG: std_logic_vector(PRED_BITS-1 downto 0) := "00";
 	
-	
+	-- struttura interna di ogni linea di cache
 	type way_type is record
-		tag_pc : std_logic_vector(TAG_BITS-1 downto 0);
-		dest_pc : std_logic_vector(PC_BITS-1 downto 0);
-		pred : std_logic_vector(PRED_BITS-1 downto 0);
+		tag_pc : std_logic_vector(TAG_BITS-1 downto 0); -- tag
+		dest_pc : std_logic_vector(PC_BITS-1 downto 0); -- destinazione del branch
+		pred : std_logic_vector(PRED_BITS-1 downto 0);	-- bit per algoritmo di predizione
 		status: std_logic; -- 0 invalido 1 valido
 		repl : std_logic; -- 1 se linea da sostituire
 	end record;
 	
+	-- la cache è strutturata come una matrice SLOTS_NUM X WAYS_NUM
 	type btb_cache is array (0 to SLOTS_NUM-1, 0 to WAYS_NUM-1) of way_type;
 	
 end Btb;
