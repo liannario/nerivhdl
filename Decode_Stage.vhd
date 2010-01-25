@@ -147,7 +147,8 @@ architecture Arch1_Decode_Stage of Decode_Stage is
 		
 		pc_out <= pc_buffer;
 		--segnali per il btb
-		tkn_out_btb <= tkn_buffer;
+		tkn_out_btb <= tkn_buffer; -- la predizione campionata dalla barriera IF/ID viene portata su quella ID/EX
+											-- per essere campionata al clock successivo dallo stadio di EX
 		
 		-- uscite di debug
 		register_file_debug <= register_file_inst;

@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Company: 
--- Engineer:
+-- Engineer: Enrico Baioni, Raffaele Luca Iannario, Simone Tallevi Diotallevi
 --
 -- Create Date:   16:26:49 01/15/2010
 -- Design Name:   
@@ -54,7 +54,7 @@ ARCHITECTURE behavior OF Btb_component_Test IS
         );
     END COMPONENT;
     
-	--clock
+	--clock (non necessario; utilizzato solo per riferimento)
 	signal clk: std_logic := '0';
 
    --Inputs
@@ -95,7 +95,7 @@ BEGIN
 		end process;
  
 
-   -- Stimulus process
+   -- reset cache BTB
    reset_proces: process
    begin		
       
@@ -105,8 +105,10 @@ BEGIN
       wait for TIME_UNIT*2;
 		reset <= '0';
 		wait;
+		
    end process;
 	
+	-- Scrittura BTB
 	write_btb : process
 	
 	variable var_pc_ex: integer := 64;
@@ -130,6 +132,7 @@ BEGIN
 		wr <= '0';
 		-- fine inizializzazione
 		
+		-- prove di scrittura
 		wait for TIME_UNIT;		
 		wr <= '1';
 		pc_ex <= conv_std_logic_vector(64, 30);
@@ -147,6 +150,7 @@ BEGIN
 		wait for TIME_UNIT;
 		wr <= '0';
 		wait;
+		
 	end process;
 	
 	read_btb : process
@@ -154,9 +158,10 @@ BEGIN
 	variable var_pc_if: integer := 64;
 	begin
 	
-		-- attendo l'inizializzazione
+		-- attesa inizializzazione
 		wait for TIME_UNIT*5;
 	
+		-- prove di lettura
 		rd <= '1';
 		for i in 0 to 10 loop
 			pc_if <= conv_std_logic_vector(var_pc_if, 30);
@@ -170,6 +175,7 @@ BEGIN
 		wait for TIME_UNIT;
 		rd <= '0';
 		wait;
+		
 	end process;
 
 END;

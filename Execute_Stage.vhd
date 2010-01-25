@@ -238,59 +238,55 @@ architecture Arch1_Execute_Stage of Execute_Stage is
 						alu_exit <= var_register_a + sxt(a_immediate_16, PARALLELISM);
 					when I_ANDI =>
 						alu_exit <= var_register_a and ext(a_immediate_16, PARALLELISM);
-					when I_BEQZ =>
-						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
+					when I_BEQZ => -- istruzione BEQZ
+						wr_btb <= '1';
+						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1; -- calcolo indirizzo di destinazione del branch ed emissione sulla relativa porta del btb
 						if conv_integer(var_register_a) = 0 then -- branch da prendere
 							--segnali per il btb
-							wr_btb <= '1';
-							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_btb <= PRED_OK;
-								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_OK; -- predizione corretta: non è necessario utilizzare la J&B
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							else -- e non preso
-								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;	
-								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_NOT_OK; -- predizione errata: è necessario utilizzare la J&B => force_jump = 1
+								force_jump <= '1';					
+								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							end if;
-						else -- branch da non prendere
-							wr_btb <= '1';							
+						else -- branch da non prendere			
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_btb <= PRED_OK;		
-								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
-								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_OK;	-- predizione corretta: non è necessario utilizzare la J&B		
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							else -- e preso
-								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;								
-								pc_for_jump <= pc_buffer + 1;
-								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_NOT_OK; -- predizione errata: è necessario utilizzare la J&B => force_jump = 1
+								force_jump <= '1';														
+								pc_for_jump <= pc_buffer + 1; -- deve essere eseguito il fetch dell'istruzione successiva a quella che si trova attualmente in EX
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							end if;
 						end if;
 						alu_exit <= (others => '0');
-					when I_BNEZ =>
-						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
-						if conv_integer(var_register_a) /= 0 then -- branch da prendere
+					when I_BNEZ => -- istruzione BNEZ
+						wr_btb <= '1'; 
+						pc_dest_btb <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1; -- calcolo indirizzo di destinazione del branch ed emissione sulla relativa porta del btb
+						if conv_integer(var_register_a) /= 0 then -- branch da prendere 
 							--segnali per il btb
-							wr_btb <= '1';
-							pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
 							if(tkn_buffer = TAKEN) then -- e preso
-								pred_ok_btb <= PRED_OK;	
-								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_OK;	-- predizione corretta: non è necessario utilizzare la J&B
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							else -- e non preso
+								pred_ok_btb <= PRED_NOT_OK; -- predizione errata: è necessario utilizzare la J&B => force_jump = 1
 								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;	
-								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
+								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;		
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							end if;
 						else -- branch da non prendere
-							wr_btb <= '1';
 							if(tkn_buffer = UNTAKEN) then	-- e non preso
-								pred_ok_btb <= PRED_OK;	
-								pc_for_jump <= pc_buffer + to_stdlogicvector(to_bitvector(sxt(a_immediate_16, PC_BITS)) sra 2) + 1;
-								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_OK;	-- predizione corretta: non è necessario utilizzare la J&B
+								if(pc_buffer'event) then num_branch_pred_ok_buffer := num_branch_pred_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							else -- e preso
-								force_jump <= '1';
-								pred_ok_btb <= PRED_NOT_OK;								
-								pc_for_jump <= pc_buffer + 1;
-								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if;
+								pred_ok_btb <= PRED_NOT_OK; -- predizione errata: è necessario utilizzare la J&B => force_jump = 1
+								force_jump <= '1';																
+								pc_for_jump <= pc_buffer + 1; -- deve essere eseguito il fetch dell'istruzione successiva a quella che si trova attualmente in EX
+								if(pc_buffer'event) then num_branch_pred_not_ok_buffer := num_branch_pred_not_ok_buffer + 1; end if; -- aggionamento contatori per le statistiche
 							end if;
 						end if; 
 						alu_exit <= (others => '0');						
