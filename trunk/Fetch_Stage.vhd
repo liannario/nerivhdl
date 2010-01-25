@@ -30,190 +30,22 @@ signal pc_reg: std_logic_vector(PC_BITS-1 downto 0) := (others => '0');
 constant PC_INIT: std_logic_vector(PC_BITS-1 downto 0) := (others => '0');
 
 -- La memoria con il codice macchina del DLX
-constant EPROM_inst: eprom_type(0 to 135) := (
---												X"20010004",
---												X"20220009",
---												X"00411822",
---												X"0BFFFFF0",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF"
-
---												X"20010000",
---												X"20020003",
---												X"2042FFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"1440FFF4",
---												X"20010001",
---												X"20010000",
---												X"1020FFEC",
---												X"FFFFFFFF"
-											
---												X"20220003",
---												X"20010000",
---												X"2042FFFF",
---												X"20010001",
---												X"20210002",
---												X"1440FFEC",
---												X"20420001",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF"
+constant EPROM_inst: eprom_type(0 to 12) := (
 												
---												X"20220008",
---												X"20010008",
---												X"28420001",
---												X"20030001",
---												X"20210000",
---												X"1440FFEC",
---												X"20420001",
---												X"28210001",
---												X"20030001",
---												X"1420FFE0",
---												X"FFFFFFFF",
---												X"FFFFFFFF",
---												X"FFFFFFFF"
+												X"20220008",
+												X"20010008",
+												X"28420001",
+												X"20030001",
+												X"20210000",
+												X"1440FFEC",
+												X"20420001",
+												X"28210001",
+												X"20030001",
+												X"1420FFE0",
+												X"FFFFFFFF",
+												X"FFFFFFFF",
+												X"FFFFFFFF"
 
-												X"2001000A",
-												 X"2002000A",
-												 X"20840000",
-												 X"142000F0",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"28210001",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"28210001",
-												 X"144000D0",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"28420001",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"1420FDF8",
-												 X"20840000",												 
-												 X"20840000",
-												 X"20840000",
-												 X"20840000",
-												 X"20840000"
 											);
 
 
@@ -231,11 +63,11 @@ begin
 				if clk'event and clk = '1' then
 					if force_jump = '1' then
 						pc_reg <= pc_for_jump + 1;
-					-- segnali per il btb	
-					elsif tkn_in_btb = TAKEN then
-						pc_reg <= pc_dest_btb; 
+					-- segnali per il btb
+					elsif tkn_in_btb = TAKEN then -- se la predizione dell'istruzione precedente è stata taken
+						pc_reg <= pc_dest_btb; 		-- si esegue il fetch al pc predetto
 					else
-						pc_reg <= pc_reg + 1;
+						pc_reg <= pc_reg + 1;		-- altrimenti normale incremento del pc
 					end if;
 				end if;
 			end if;
@@ -254,7 +86,7 @@ begin
 				rd_btb <= '0';
 			else
 				--segnali per il btb
-				rd_btb <= '1';
+				rd_btb <= '1'; -- attivazione segnale di rd del btb
 				if force_jump = '1' then
 					-- Se force_jump (da J&B EX) è asserito esegue il fetch della istruzione all'indirizzo di destinazione 
 					-- del salto (ovvero a all'indirizzo pc_for_jump (opportunamente esteso) fornito da J&B di EX)
@@ -274,7 +106,7 @@ begin
 					
 					
 					-- Invia il program counter all'uscita per essere campionato dallo stadio successivo (ID)
-					-- il segnale va inviato anche al btb per l'interrogazione --segnali per il btb
+					-- il segnale va inviato anche al btb per l'interrogazione in lettura
 					pc <= pc_reg;
 				end if;
 			end if;

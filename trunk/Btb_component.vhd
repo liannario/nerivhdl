@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Enrico Baioni, Raffaele Luca Iannario, Simone Tallevi Diotallevi
 -- 
 -- Create Date:    15:46:42 12/10/2009 
 -- Design Name: 
@@ -24,11 +24,6 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.Global.all;
 use work.Btb.all;
 
----- Uncomment the following library declaration if instantiating
----- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity Btb_component is
     Port ( wr : in  STD_LOGIC; -- segnale write
            rd : in  STD_LOGIC; -- segnale read
@@ -43,7 +38,7 @@ end Btb_component;
 
 architecture Behavioral of Btb_component is
 	
-	signal Btb_inst : btb_cache; -- Btb_inst(0, 0).tag_pc <= (others => '0');
+	signal Btb_inst : btb_cache; -- es. di accesso: Btb_inst(0, 0).tag_pc <= (others => '0');
 	
 begin
 	
@@ -62,7 +57,7 @@ begin
 	
 	begin
 	
-		if(reset = '1') then
+		if(reset = '1') then -- segnale di reset prioritario
 		
 			for i in 0 to SLOTS_NUM-1 loop
 				for j in 0 to WAYS_NUM-1 loop
@@ -80,6 +75,7 @@ begin
 		
 			-- Lettura dallo stadio IF
 			if(pc_if'event and rd = '1') then
+			
 				-- estrazione tag e index da pc_if
 				tag_rd := pc_if(PC_BITS-1 downto SLOT_BITS);
 				index_rd := conv_integer(pc_if(SLOT_BITS-1 downto 0));
@@ -111,9 +107,11 @@ begin
 				else -- linea non trovata
 					tkn_if <= UNTAKEN; -- anche nel caso non venga trovata la linea corrispondente
 				end if;
+				
 			end if;
 			
 			-- Scrittura dallo stadio EX
+			
 			if(pc_ex'event and wr = '1') then
 				-- estrazione tag e index da pc_ex
 				tag_wr := pc_ex(PC_BITS-1 downto SLOT_BITS);
@@ -136,7 +134,7 @@ begin
 								when UNTAKEN_STRONG => Btb_inst(index_wr, i).pred <= UNTAKEN_STRONG;
 								when others => Btb_inst(index_wr, i).pred <= UNTAKEN_STRONG;
 							end case;
-						else -- predizione sbagliata
+						else -- predizione errata
 							case Btb_inst(index_wr, i).pred is
 								when TAKEN_STRONG => Btb_inst(index_wr, i).pred <= TAKEN_WEAK;
 								when TAKEN_WEAK => Btb_inst(index_wr, i).pred <= UNTAKEN_WEAK;
@@ -164,7 +162,7 @@ begin
 							else
 								Btb_inst(index_wr, i).pred <= TAKEN_STRONG;
 							end if;
-							exit; -- break altrimenti se ci fossero altre linee invalide scriverei lo stesso dato più volte
+							exit; -- break altrimenti se ci fossero altre linee invalide si scriverebbe lo stesso dato più volte
 						end if;
 					end loop;
 					
@@ -191,6 +189,7 @@ begin
 						end loop;
 					end if;
 				end if;
+				
 			end if;
 		end if;
 		
